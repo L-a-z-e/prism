@@ -7,6 +7,24 @@
       </router-link>
     </div>
 
+    <!-- Filters -->
+    <div class="flex gap-4 mb-6 bg-white p-4 rounded shadow-sm border">
+      <select v-model="filters.status" @change="fetchTasks" class="border rounded p-2 text-sm">
+        <option value="">All Status</option>
+        <option value="TODO">To Do</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="DONE">Done</option>
+        <option value="FAILED">Failed</option>
+      </select>
+      <select v-model="filters.priority" @change="fetchTasks" class="border rounded p-2 text-sm">
+        <option value="">All Priorities</option>
+        <option value="LOW">Low</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="HIGH">High</option>
+        <option value="CRITICAL">Critical</option>
+      </select>
+    </div>
+
     <div v-if="loading" class="text-center">Loading...</div>
 
     <div v-else class="space-y-4">
@@ -32,15 +50,29 @@ import { getTasks, type Task } from '../api';
 
 const tasks = ref<Task[]>([]);
 const loading = ref(true);
+const filters = ref({
+  status: '',
+  priority: ''
+});
 
-onMounted(async () => {
+const fetchTasks = async () => {
+  loading.value = true;
   try {
-    tasks.value = await getTasks();
+    // Convert empty strings to undefined to avoid sending empty params
+    const params = {
+      status: filters.value.status || undefined,
+      priority: filters.value.priority || undefined
+    };
+    tasks.value = await getTasks(params);
   } catch (e) {
     console.error(e);
   } finally {
     loading.value = false;
   }
+};
+
+onMounted(() => {
+  fetchTasks();
 });
 
 const statusClass = (status: string) => {
