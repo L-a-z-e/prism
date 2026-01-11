@@ -1,32 +1,22 @@
 package com.prism.service;
 
-import com.prism.domain.ActivityLog;
-import com.prism.domain.Task;
+import com.prism.domain.*;
 import com.prism.dto.CreateTaskRequest;
 import com.prism.dto.TaskResponse;
-import com.prism.repository.ActivityLogRepository;
-import com.prism.repository.AgentRepository;
-import com.prism.repository.ProjectRepository;
-import com.prism.repository.TaskRepository;
-import com.prism.repository.UserRepository;
-import com.prism.repository.OrganizationRepository;
-import com.prism.repository.AiProviderRepository;
-import com.prism.domain.Organization;
-import com.prism.domain.User;
-import com.prism.domain.Project;
+import com.prism.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -45,13 +35,13 @@ class TaskServiceIntegrationTest {
     @Autowired
     private ProjectRepository projectRepository;
 
-    @MockBean
+    @MockitoBean
     private ActivityLogRepository activityLogRepository; // Mock Mongo
 
-    @MockBean
+    @MockitoBean
     private StringRedisTemplate redisTemplate; // Mock Redis
 
-    @MockBean
+    @MockitoBean
     private SimpMessagingTemplate messagingTemplate; // Mock Websocket
 
     private String projectId;
