@@ -37,6 +37,11 @@ message UpdateTaskStatusRequest {
   string agent_id = 2;
   string status = 3; // TODO, IN_PROGRESS, DONE, FAILED
   string details = 4; // JSON or text log
+
+  // Git Metadata
+  string git_branch = 5;
+  string git_commit_hash = 6;
+  string git_pr_url = 7;
 }
 
 message UpdateTaskStatusResponse {

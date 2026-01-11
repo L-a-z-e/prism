@@ -222,11 +222,15 @@ func (x *HeartbeatResponse) GetAcknowledged() bool {
 }
 
 type UpdateTaskStatusRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TaskId        string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
-	AgentId       string                 `protobuf:"bytes,2,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
-	Status        string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`   // TODO, IN_PROGRESS, DONE, FAILED
-	Details       string                 `protobuf:"bytes,4,opt,name=details,proto3" json:"details,omitempty"` // JSON or text log
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	TaskId  string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	AgentId string                 `protobuf:"bytes,2,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	Status  string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`   // TODO, IN_PROGRESS, DONE, FAILED
+	Details string                 `protobuf:"bytes,4,opt,name=details,proto3" json:"details,omitempty"` // JSON or text log
+	// Git Metadata
+	GitBranch     string `protobuf:"bytes,5,opt,name=git_branch,json=gitBranch,proto3" json:"git_branch,omitempty"`
+	GitCommitHash string `protobuf:"bytes,6,opt,name=git_commit_hash,json=gitCommitHash,proto3" json:"git_commit_hash,omitempty"`
+	GitPrUrl      string `protobuf:"bytes,7,opt,name=git_pr_url,json=gitPrUrl,proto3" json:"git_pr_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -285,6 +289,27 @@ func (x *UpdateTaskStatusRequest) GetStatus() string {
 func (x *UpdateTaskStatusRequest) GetDetails() string {
 	if x != nil {
 		return x.Details
+	}
+	return ""
+}
+
+func (x *UpdateTaskStatusRequest) GetGitBranch() string {
+	if x != nil {
+		return x.GitBranch
+	}
+	return ""
+}
+
+func (x *UpdateTaskStatusRequest) GetGitCommitHash() string {
+	if x != nil {
+		return x.GitCommitHash
+	}
+	return ""
+}
+
+func (x *UpdateTaskStatusRequest) GetGitPrUrl() string {
+	if x != nil {
+		return x.GitPrUrl
 	}
 	return ""
 }
@@ -348,12 +373,17 @@ const file_proto_prism_proto_rawDesc = "" +
 	"\bagent_id\x18\x01 \x01(\tR\aagentId\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\tR\x06status\"7\n" +
 	"\x11HeartbeatResponse\x12\"\n" +
-	"\facknowledged\x18\x01 \x01(\bR\facknowledged\"\x7f\n" +
+	"\facknowledged\x18\x01 \x01(\bR\facknowledged\"\xe4\x01\n" +
 	"\x17UpdateTaskStatusRequest\x12\x17\n" +
 	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x19\n" +
 	"\bagent_id\x18\x02 \x01(\tR\aagentId\x12\x16\n" +
 	"\x06status\x18\x03 \x01(\tR\x06status\x12\x18\n" +
-	"\adetails\x18\x04 \x01(\tR\adetails\"4\n" +
+	"\adetails\x18\x04 \x01(\tR\adetails\x12\x1d\n" +
+	"\n" +
+	"git_branch\x18\x05 \x01(\tR\tgitBranch\x12&\n" +
+	"\x0fgit_commit_hash\x18\x06 \x01(\tR\rgitCommitHash\x12\x1c\n" +
+	"\n" +
+	"git_pr_url\x18\a \x01(\tR\bgitPrUrl\"4\n" +
 	"\x18UpdateTaskStatusResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess2\xef\x01\n" +
 	"\fAgentService\x12J\n" +
