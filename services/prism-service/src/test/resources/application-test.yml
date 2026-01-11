@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  data:
+    mongodb:
+      host: localhost
+      port: 27017 # Will likely mock this or disable it
+    redis:
+      host: localhost
+      port: 6379 # Will mock this
+
+grpc:
+  server:
+    port: -1 # Disable gRPC server in tests
