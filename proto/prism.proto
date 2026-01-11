@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package prism;
+
+option java_multiple_files = true;
+option java_package = "com.prism.grpc";
+option java_outer_classname = "PrismProto";
+
+service AgentService {
+  rpc RegisterAgent (RegisterAgentRequest) returns (RegisterAgentResponse);
+  rpc Heartbeat (HeartbeatRequest) returns (HeartbeatResponse);
+}
+
+message RegisterAgentRequest {
+  string agent_id = 1;
+  string version = 2;
+}
+
+message RegisterAgentResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message HeartbeatRequest {
+  string agent_id = 1;
+  string status = 2;
+}
+
+message HeartbeatResponse {
+  bool acknowledged = 1;
+}

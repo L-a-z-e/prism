@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: prism-mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: prism
+      MYSQL_USER: prism
+      MYSQL_PASSWORD: prism
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mongodb:
+    image: mongo:6.0
+    container_name: prism-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7.0
+    container_name: prism-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  mysql_data:
+  mongo_data:
+  redis_data:
