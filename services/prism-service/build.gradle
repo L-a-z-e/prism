@@ -32,6 +32,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // Documentation
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
     // gRPC
     implementation 'net.devh:grpc-server-spring-boot-starter:3.1.0.RELEASE'
     implementation 'io.grpc:grpc-stub:1.64.0'

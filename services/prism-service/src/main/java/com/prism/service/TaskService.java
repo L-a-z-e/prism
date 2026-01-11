@@ -19,6 +19,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +37,7 @@ public class TaskService {
     private final SimpMessagingTemplate messagingTemplate;
 
     @Transactional
+    @CacheEvict(value = {"dashboardStats", "dashboardCharts"}, allEntries = true)
     public TaskResponse createTask(CreateTaskRequest request) {
         User currentUser = mockUserService.getCurrentUser();
 
@@ -107,8 +109,7 @@ public class TaskService {
         Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
-        List<com.prism.domain.ActivityLog> logs = activityLogRepository.findAll().stream() // In real app, filter by task_id in Query
-            .filter(l -> l.getTaskId().equals(taskId))
+        List<com.prism.domain.ActivityLog> logs = activityLogRepository.findByTaskId(taskId).stream()
             .sorted((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()))
             .collect(Collectors.toList());
 
