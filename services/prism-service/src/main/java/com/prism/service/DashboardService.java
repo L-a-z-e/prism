@@ -5,6 +5,7 @@ import com.prism.repository.ActivityLogRepository;
 import com.prism.domain.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ public class DashboardService {
     private final TaskRepository taskRepository;
     private final ActivityLogRepository activityLogRepository;
 
+    @Cacheable("dashboardStats")
     public Map<String, Object> getStats() {
         Map<String, Object> stats = new HashMap<>();
         long totalTasks = taskRepository.count();
@@ -38,6 +40,7 @@ public class DashboardService {
         return stats;
     }
 
+    @Cacheable(value = "dashboardCharts", key = "#type")
     public Map<String, Object> getChartData(String type) {
         if ("activity".equals(type)) {
              // In a real app, aggregation over ActivityLog by date

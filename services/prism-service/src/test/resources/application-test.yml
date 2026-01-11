@@ -4,6 +4,8 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+  cache:
+    type: simple
   jpa:
     hibernate:
       ddl-auto: create-drop

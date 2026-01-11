@@ -20,6 +20,7 @@ import java.util.Map;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.time.LocalDateTime;
 
@@ -57,6 +58,7 @@ public class GrpcAgentService extends AgentServiceGrpc.AgentServiceImplBase {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"dashboardStats", "dashboardCharts"}, allEntries = true)
     public void updateTaskStatus(UpdateTaskStatusRequest request, StreamObserver<UpdateTaskStatusResponse> responseObserver) {
         log.info("Received status update for Task {}: {}", request.getTaskId(), request.getStatus());
 

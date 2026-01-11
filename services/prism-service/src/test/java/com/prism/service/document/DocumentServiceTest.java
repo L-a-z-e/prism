@@ -62,7 +62,7 @@ class DocumentServiceTest {
             .build();
 
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
-        when(activityLogRepository.findAll()).thenReturn(List.of(log)); // In real code it filters stream
+        when(activityLogRepository.findByTaskId(taskId)).thenReturn(List.of(log));
         when(notionClient.createPage(anyString(), anyString())).thenReturn("page-id-123");
 
         // Act
