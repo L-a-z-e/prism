@@ -28,6 +28,25 @@
               {{ new Date(taskDetail.task.createdAt).toLocaleString() }}
             </div>
           </div>
+
+          <!-- Git Metadata -->
+          <div v-if="taskDetail.task.gitBranch || taskDetail.task.gitPrUrl" class="mt-6 border-t pt-4">
+             <h3 class="text-sm font-bold mb-2">Git Integration</h3>
+             <div class="grid grid-cols-2 gap-4 text-sm">
+                <div v-if="taskDetail.task.gitBranch">
+                    <span class="block text-xs font-semibold uppercase text-gray-400">Branch</span>
+                    <span class="font-mono bg-gray-100 px-1 rounded">{{ taskDetail.task.gitBranch }}</span>
+                </div>
+                <div v-if="taskDetail.task.gitCommitHash">
+                    <span class="block text-xs font-semibold uppercase text-gray-400">Commit</span>
+                    <span class="font-mono bg-gray-100 px-1 rounded">{{ taskDetail.task.gitCommitHash.substring(0, 7) }}</span>
+                </div>
+                <div v-if="taskDetail.task.gitPrUrl" class="col-span-2">
+                    <span class="block text-xs font-semibold uppercase text-gray-400">Pull Request</span>
+                    <a :href="taskDetail.task.gitPrUrl" target="_blank" class="text-blue-600 hover:underline">{{ taskDetail.task.gitPrUrl }}</a>
+                </div>
+             </div>
+          </div>
         </div>
 
         <!-- Build/Deployment Logs (Mock for now, can be real streaming logs) -->
@@ -79,6 +98,11 @@ const { connect, subscribe } = useWebSocket(() => {
         // Update Status
         if (taskDetail.value && message.type === 'STATUS_UPDATE') {
             taskDetail.value.task.status = message.status;
+
+            // Update Git info if present
+            if (message.gitBranch) taskDetail.value.task.gitBranch = message.gitBranch;
+            if (message.gitCommitHash) taskDetail.value.task.gitCommitHash = message.gitCommitHash;
+            if (message.gitPrUrl) taskDetail.value.task.gitPrUrl = message.gitPrUrl;
 
             // Add to timeline
             taskDetail.value.timeline.unshift({

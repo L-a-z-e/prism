@@ -36,6 +36,9 @@ export interface Task {
   assignedToName: string;
   projectName: string;
   createdAt: string;
+  gitBranch?: string;
+  gitCommitHash?: string;
+  gitPrUrl?: string;
 }
 
 export const getTasks = async (): Promise<Task[]> => {

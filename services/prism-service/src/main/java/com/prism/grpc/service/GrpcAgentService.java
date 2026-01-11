@@ -74,6 +74,17 @@ public class GrpcAgentService extends AgentServiceGrpc.AgentServiceImplBase {
                 task.setDeploymentLog(existing + request.getDetails());
             }
 
+            if (request.getGitBranch() != null && !request.getGitBranch().isEmpty()) {
+                task.setGitBranch(request.getGitBranch());
+            }
+            if (request.getGitCommitHash() != null && !request.getGitCommitHash().isEmpty()) {
+                task.setGitCommitHash(request.getGitCommitHash());
+            }
+            if (request.getGitPrUrl() != null && !request.getGitPrUrl().isEmpty()) {
+                task.setGitPrUrl(request.getGitPrUrl());
+                task.setGitPrStatus("OPEN"); // Assume OPEN if URL is sent
+            }
+
             taskRepository.save(task);
 
             activityLogRepository.save(ActivityLog.builder()
@@ -82,7 +93,9 @@ public class GrpcAgentService extends AgentServiceGrpc.AgentServiceImplBase {
                 .action("TASK_STATUS_UPDATE")
                 .details(Map.of(
                     "status", request.getStatus(),
-                    "details", request.getDetails()
+                    "details", request.getDetails(),
+                    "git_branch", request.getGitBranch(),
+                    "git_commit", request.getGitCommitHash()
                 ))
                 .build());
 
@@ -91,6 +104,9 @@ public class GrpcAgentService extends AgentServiceGrpc.AgentServiceImplBase {
                 "type", "STATUS_UPDATE",
                 "status", request.getStatus(),
                 "details", request.getDetails(),
+                "gitBranch", request.getGitBranch(),
+                "gitCommitHash", request.getGitCommitHash(),
+                "gitPrUrl", request.getGitPrUrl(),
                 "timestamp", java.time.LocalDateTime.now().toString()
             ));
 
