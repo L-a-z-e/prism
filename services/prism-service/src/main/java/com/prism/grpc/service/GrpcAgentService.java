@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ public class GrpcAgentService extends AgentServiceGrpc.AgentServiceImplBase {
     private final AgentRepository agentRepository;
     private final TaskRepository taskRepository;
     private final ActivityLogRepository activityLogRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public void registerAgent(RegisterAgentRequest request, StreamObserver<RegisterAgentResponse> responseObserver) {
@@ -83,6 +85,14 @@ public class GrpcAgentService extends AgentServiceGrpc.AgentServiceImplBase {
                     "details", request.getDetails()
                 ))
                 .build());
+
+            // Broadcast to WebSocket
+            messagingTemplate.convertAndSend("/topic/tasks/" + task.getId(), Map.of(
+                "type", "STATUS_UPDATE",
+                "status", request.getStatus(),
+                "details", request.getDetails(),
+                "timestamp", java.time.LocalDateTime.now().toString()
+            ));
 
             responseObserver.onNext(UpdateTaskStatusResponse.newBuilder().setSuccess(true).build());
         }, () -> {

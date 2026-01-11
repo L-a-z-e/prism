@@ -7,6 +7,7 @@ import com.prism.domain.ActivityLog;
 import com.prism.domain.User;
 import com.prism.dto.CreateTaskRequest;
 import com.prism.dto.TaskResponse;
+import com.prism.dto.TaskDetailResponse;
 import com.prism.repository.TaskRepository;
 import com.prism.repository.ProjectRepository;
 import com.prism.repository.AgentRepository;
@@ -14,6 +15,7 @@ import com.prism.repository.ActivityLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,7 @@ public class TaskService {
     private final ActivityLogRepository activityLogRepository;
     private final MockUserService mockUserService;
     private final StringRedisTemplate redisTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Transactional
     public TaskResponse createTask(CreateTaskRequest request) {
@@ -78,6 +81,9 @@ public class TaskService {
             ))
             .build());
 
+        // Broadcast to WebSocket List
+        messagingTemplate.convertAndSend("/topic/tasks", TaskResponse.from(task));
+
         return TaskResponse.from(task);
     }
 
@@ -94,5 +100,21 @@ public class TaskService {
         return taskRepository.findAll().stream()
             .map(TaskResponse::from)
             .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public TaskDetailResponse getTask(String taskId) {
+        Task task = taskRepository.findById(taskId)
+            .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+
+        List<com.prism.domain.ActivityLog> logs = activityLogRepository.findAll().stream() // In real app, filter by task_id in Query
+            .filter(l -> l.getTaskId().equals(taskId))
+            .sorted((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()))
+            .collect(Collectors.toList());
+
+        return TaskDetailResponse.builder()
+            .task(TaskResponse.from(task))
+            .timeline(logs.stream().map(TaskDetailResponse.ActivityLogDTO::from).collect(Collectors.toList()))
+            .build();
     }
 }
