@@ -66,8 +66,7 @@ public class DocumentService {
         }
 
         sb.append("## Activity Timeline\n");
-        List<ActivityLog> logs = activityLogRepository.findAll().stream()
-            .filter(l -> l.getTaskId().equals(task.getId()))
+        List<ActivityLog> logs = activityLogRepository.findByTaskId(task.getId()).stream()
             .sorted((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()))
             .collect(Collectors.toList());
 

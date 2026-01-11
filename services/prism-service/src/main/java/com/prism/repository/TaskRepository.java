@@ -20,4 +20,7 @@ public interface TaskRepository extends JpaRepository<Task, String> {
         @Param("priority") String priority,
         @Param("agentId") String agentId
     );
+
+    @Query("SELECT t.status, COUNT(t) FROM Task t GROUP BY t.status")
+    List<Object[]> countTasksByStatus();
 }

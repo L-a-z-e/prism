@@ -82,3 +82,13 @@ export const downloadMarkdown = async (taskId: string) => {
   link.click();
   link.remove();
 };
+
+export const getDashboardStats = async () => {
+  const response = await api.get('/dashboard/stats');
+  return response.data;
+};
+
+export const getChartData = async (type: string) => {
+  const response = await api.get(`/dashboard/charts/${type}`);
+  return response.data;
+};

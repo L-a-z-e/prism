@@ -4,9 +4,12 @@ import AgentCreate from './views/AgentCreate.vue';
 import TaskList from './views/TaskList.vue';
 import TaskCreate from './views/TaskCreate.vue';
 import TaskDetail from './views/TaskDetail.vue';
+import Dashboard from './views/Dashboard.vue';
 
 const routes = [
-  { path: '/', component: AgentList },
+  { path: '/', redirect: '/dashboard' },
+  { path: '/dashboard', component: Dashboard },
+  { path: '/agents', component: AgentList },
   { path: '/agents/new', component: AgentCreate },
   { path: '/tasks', component: TaskList },
   { path: '/tasks/new', component: TaskCreate },
