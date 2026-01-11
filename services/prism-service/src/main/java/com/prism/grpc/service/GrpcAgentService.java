@@ -1,28 +1,20 @@
 package com.prism.grpc.service;
 
-import com.prism.domain.Agent;
-import com.prism.domain.Task;
 import com.prism.domain.ActivityLog;
-import com.prism.grpc.AgentServiceGrpc;
-import com.prism.grpc.HeartbeatRequest;
-import com.prism.grpc.HeartbeatResponse;
-import com.prism.grpc.RegisterAgentRequest;
-import com.prism.grpc.RegisterAgentResponse;
-import com.prism.grpc.UpdateTaskStatusRequest;
-import com.prism.grpc.UpdateTaskStatusResponse;
+import com.prism.grpc.*;
+import com.prism.repository.ActivityLogRepository;
 import com.prism.repository.AgentRepository;
 import com.prism.repository.TaskRepository;
-import com.prism.repository.ActivityLogRepository;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import java.util.Map;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.cache.annotation.CacheEvict;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Slf4j
 @GrpcService
@@ -71,18 +63,22 @@ public class GrpcAgentService extends AgentServiceGrpc.AgentServiceImplBase {
             }
 
             // Append log if present
-            if (request.getDetails() != null && !request.getDetails().isEmpty()) {
+            request.getDetails();
+            if (!request.getDetails().isEmpty()) {
                 String existing = task.getDeploymentLog() == null ? "" : task.getDeploymentLog() + "\n";
                 task.setDeploymentLog(existing + request.getDetails());
             }
 
-            if (request.getGitBranch() != null && !request.getGitBranch().isEmpty()) {
+            request.getGitBranch();
+            if (!request.getGitBranch().isEmpty()) {
                 task.setGitBranch(request.getGitBranch());
             }
-            if (request.getGitCommitHash() != null && !request.getGitCommitHash().isEmpty()) {
+            request.getGitCommitHash();
+            if (!request.getGitCommitHash().isEmpty()) {
                 task.setGitCommitHash(request.getGitCommitHash());
             }
-            if (request.getGitPrUrl() != null && !request.getGitPrUrl().isEmpty()) {
+            request.getGitPrUrl();
+            if (!request.getGitPrUrl().isEmpty()) {
                 task.setGitPrUrl(request.getGitPrUrl());
                 task.setGitPrStatus("OPEN"); // Assume OPEN if URL is sent
             }
