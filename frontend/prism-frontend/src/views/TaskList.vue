@@ -10,7 +10,7 @@
     <div v-if="loading" class="text-center">Loading...</div>
 
     <div v-else class="space-y-4">
-      <div v-for="task in tasks" :key="task.id" class="border p-4 rounded shadow-sm bg-white hover:shadow-md transition">
+      <div v-for="task in tasks" :key="task.id" class="border p-4 rounded shadow-sm bg-white hover:shadow-md transition cursor-pointer" @click="$router.push(`/tasks/${task.id}`)">
         <div class="flex justify-between">
           <h2 class="text-xl font-semibold">{{ task.title }}</h2>
           <span :class="statusClass(task.status)" class="text-xs px-2 py-1 rounded font-bold uppercase">{{ task.status }}</span>

@@ -26,4 +26,9 @@ public class TaskController {
     public List<TaskResponse> getAllTasks() {
         return taskService.getAllTasks();
     }
+
+    @GetMapping("/{taskId}")
+    public com.prism.dto.TaskDetailResponse getTask(@PathVariable String taskId) {
+        return taskService.getTask(taskId);
+    }
 }

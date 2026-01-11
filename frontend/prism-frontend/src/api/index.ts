@@ -47,3 +47,19 @@ export const createTask = async (task: any): Promise<Task> => {
   const response = await api.post('/tasks', task);
   return response.data;
 };
+
+export interface ActivityLog {
+  action: string;
+  timestamp: string;
+  details: any;
+}
+
+export interface TaskDetail {
+  task: Task;
+  timeline: ActivityLog[];
+}
+
+export const getTask = async (taskId: string): Promise<TaskDetail> => {
+  const response = await api.get(`/tasks/${taskId}`);
+  return response.data;
+};
