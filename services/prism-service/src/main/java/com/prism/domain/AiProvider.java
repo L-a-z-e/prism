@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,9 @@ public class AiProvider {
     private String name;
     private String baseUrl;
     private String apiKeyEnvVar;
+
+    @Column(precision = 10, scale = 4)
+    private java.math.BigDecimal costPer1kTokens; // e.g., 0.0020
 
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
