@@ -59,6 +59,9 @@ public class Task {
     private String gitPrUrl;
     private String gitPrStatus;
 
+    private String notionPageId;
+    private String markdownPath;
+
     @Column(columnDefinition = "JSON")
     private String testResult;
 

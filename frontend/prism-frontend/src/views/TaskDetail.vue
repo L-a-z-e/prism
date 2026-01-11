@@ -8,9 +8,15 @@
         <div class="bg-white p-6 rounded shadow-sm border">
           <div class="flex justify-between items-start mb-4">
             <h1 class="text-2xl font-bold">{{ taskDetail.task.title }}</h1>
-            <span :class="statusClass(taskDetail.task.status)" class="px-3 py-1 rounded text-sm font-bold uppercase">
-              {{ taskDetail.task.status }}
-            </span>
+            <div class="flex items-center gap-2">
+                <button @click="handleExport" :disabled="exporting" class="text-sm px-3 py-1 border rounded hover:bg-gray-50 flex items-center gap-1">
+                    <span v-if="exporting">...</span>
+                    <span v-else>Export to Notion</span>
+                </button>
+                <span :class="statusClass(taskDetail.task.status)" class="px-3 py-1 rounded text-sm font-bold uppercase">
+                {{ taskDetail.task.status }}
+                </span>
+            </div>
           </div>
           <p class="text-gray-700 mb-4">{{ taskDetail.task.description }}</p>
 
@@ -81,7 +87,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getTask, type TaskDetail } from '../api';
+import { getTask, exportToNotion, type TaskDetail } from '../api';
 import { useWebSocket } from '../useWebSocket';
 
 const route = useRoute();
@@ -89,6 +95,7 @@ const taskId = route.params.id as string;
 
 const taskDetail = ref<TaskDetail | null>(null);
 const loading = ref(true);
+const exporting = ref(false);
 const logs = ref<any[]>([]);
 
 const { connect, subscribe } = useWebSocket(() => {
@@ -149,5 +156,18 @@ const activityColor = (action: string) => {
 
 const formatAction = (action: string) => {
     return action.replace(/_/g, ' ');
+};
+
+const handleExport = async () => {
+    exporting.value = true;
+    try {
+        await exportToNotion(taskId);
+        alert('Successfully exported to Notion!');
+    } catch (e) {
+        console.error(e);
+        alert('Failed to export document');
+    } finally {
+        exporting.value = false;
+    }
 };
 </script>

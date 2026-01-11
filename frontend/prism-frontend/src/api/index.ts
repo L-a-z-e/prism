@@ -66,3 +66,8 @@ export const getTask = async (taskId: string): Promise<TaskDetail> => {
   const response = await api.get(`/tasks/${taskId}`);
   return response.data;
 };
+
+export const exportToNotion = async (taskId: string): Promise<{ pageId: string }> => {
+  const response = await api.post(`/tasks/${taskId}/documents/notion`);
+  return response.data;
+};
