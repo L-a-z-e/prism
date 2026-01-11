@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: prism-service
+  datasource:
+    url: jdbc:mysql://localhost:3307/prism?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: prism
+    password: prism
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: prism
+    redis:
+      host: localhost
+      port: 6379
+
+server:
+  port: 8085
+
+grpc:
+  server:
+    port: 9090
