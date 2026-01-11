@@ -23,8 +23,12 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskResponse> getAllTasks() {
-        return taskService.getAllTasks();
+    public List<TaskResponse> getAllTasks(
+        @RequestParam(required = false) String status,
+        @RequestParam(required = false) String priority,
+        @RequestParam(required = false) String agentId
+    ) {
+        return taskService.getAllTasks(status, priority, agentId);
     }
 
     @GetMapping("/{taskId}")

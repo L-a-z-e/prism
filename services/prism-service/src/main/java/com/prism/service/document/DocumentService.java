@@ -34,6 +34,13 @@ public class DocumentService {
         return pageId;
     }
 
+    @Transactional(readOnly = true)
+    public String getRawMarkdown(String taskId) {
+        Task task = taskRepository.findById(taskId)
+            .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        return generateMarkdown(task);
+    }
+
     private String generateMarkdown(Task task) {
         StringBuilder sb = new StringBuilder();
 

@@ -41,8 +41,8 @@ export interface Task {
   gitPrUrl?: string;
 }
 
-export const getTasks = async (): Promise<Task[]> => {
-  const response = await api.get('/tasks');
+export const getTasks = async (filters?: any): Promise<Task[]> => {
+  const response = await api.get('/tasks', { params: filters });
   return response.data;
 };
 
@@ -70,4 +70,15 @@ export const getTask = async (taskId: string): Promise<TaskDetail> => {
 export const exportToNotion = async (taskId: string): Promise<{ pageId: string }> => {
   const response = await api.post(`/tasks/${taskId}/documents/notion`);
   return response.data;
+};
+
+export const downloadMarkdown = async (taskId: string) => {
+  const response = await api.get(`/tasks/${taskId}/documents/raw`, { responseType: 'blob' });
+  const url = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', `task-${taskId}.md`);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 };

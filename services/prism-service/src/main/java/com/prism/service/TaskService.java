@@ -96,8 +96,8 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<TaskResponse> getAllTasks() {
-        return taskRepository.findAll().stream()
+    public List<TaskResponse> getAllTasks(String status, String priority, String agentId) {
+        return taskRepository.findByFilters(status, priority, agentId).stream()
             .map(TaskResponse::from)
             .collect(Collectors.toList());
     }

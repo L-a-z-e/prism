@@ -9,6 +9,9 @@
           <div class="flex justify-between items-start mb-4">
             <h1 class="text-2xl font-bold">{{ taskDetail.task.title }}</h1>
             <div class="flex items-center gap-2">
+                <button @click="handleDownload" class="text-sm px-3 py-1 border rounded hover:bg-gray-50 flex items-center gap-1 text-gray-700">
+                    <span>⬇ .md</span>
+                </button>
                 <button @click="handleExport" :disabled="exporting" class="text-sm px-3 py-1 border rounded hover:bg-gray-50 flex items-center gap-1">
                     <span v-if="exporting">...</span>
                     <span v-else>Export to Notion</span>
@@ -87,7 +90,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getTask, exportToNotion, type TaskDetail } from '../api';
+import { getTask, exportToNotion, downloadMarkdown, type TaskDetail } from '../api';
 import { useWebSocket } from '../useWebSocket';
 
 const route = useRoute();
@@ -168,6 +171,15 @@ const handleExport = async () => {
         alert('Failed to export document');
     } finally {
         exporting.value = false;
+    }
+};
+
+const handleDownload = async () => {
+    try {
+        await downloadMarkdown(taskId);
+    } catch (e) {
+        console.error(e);
+        alert('Failed to download markdown');
     }
 };
 </script>
