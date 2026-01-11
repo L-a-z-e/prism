@@ -1,0 +1,4 @@
+rootProject.name= 'prism'
+
+include ':services:prism-service'
+project(':services:prism-service').projectDir = file('services/prism-service')
