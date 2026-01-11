@@ -26,3 +26,24 @@ export const createAgent = async (agent: any): Promise<Agent> => {
   const response = await api.post('/agents', agent);
   return response.data;
 };
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  assignedToName: string;
+  projectName: string;
+  createdAt: string;
+}
+
+export const getTasks = async (): Promise<Task[]> => {
+  const response = await api.get('/tasks');
+  return response.data;
+};
+
+export const createTask = async (task: any): Promise<Task> => {
+  const response = await api.post('/tasks', task);
+  return response.data;
+};
