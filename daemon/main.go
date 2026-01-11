@@ -1,16 +1,29 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	"flag"
+	"log"
+
+	"github.com/prism/daemon/internal/agent"
 )
 
 func main() {
-	if len(os.Args) > 1 && os.Args[1] == "setup" {
-		fmt.Println("Setting up Prism Daemon...")
-		// Placeholder for setup logic
-		fmt.Println("✅ Daemon installed")
-		return
+	agentID := flag.String("agent-id", "", "The UUID of the agent this daemon represents")
+	redisAddr := flag.String("redis-addr", "localhost:6379", "Redis address")
+	grpcAddr := flag.String("grpc-addr", "localhost:9090", "Prism Server gRPC address")
+
+	flag.Parse()
+
+	if *agentID == "" {
+		log.Fatal("Please provide --agent-id")
 	}
-	fmt.Println("Prism Daemon Running...")
+
+	cfg := agent.Config{
+		AgentID:   *agentID,
+		RedisAddr: *redisAddr,
+		GrpcAddr:  *grpcAddr,
+	}
+
+	w := agent.NewWorker(cfg)
+	w.Start()
 }

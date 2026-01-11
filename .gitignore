@@ -57,3 +57,7 @@ yarn-error.log
 
 # Specific Daemon Binary
 daemon/daemon
+
+# Protoc
+protoc_install/
+*.zip
